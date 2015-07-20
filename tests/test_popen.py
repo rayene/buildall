@@ -1,6 +1,7 @@
 from unittest import TestCase
 from buildall import Task, Popen
 
+
 class ExitTask(Task):
 	def __init__(self, input_exit_value, target_exit_value):
 		self.input_exit_value = input_exit_value

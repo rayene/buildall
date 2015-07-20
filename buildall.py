@@ -1,7 +1,9 @@
 from pathlib import PosixPath as PythonPathClass
 from subprocess import Popen as PythonPopenClass
 
-END_OF_TIME = 9999999999999999999 # TODO: find a better value
+# TODO: find a better value
+END_OF_TIME = 9999999999999999999
+
 
 class BaseTask:
 
@@ -15,11 +17,10 @@ class BaseTask:
 		return []
 
 	def command(self):
-		raise NotImplementedError('You should implement your own command() method')
+		raise NotImplementedError('You should implement your own command()')
 
 	def targets(self):
 		return []
-
 
 	def debug(self, msg):
 		indent = self._indent_level * '\t'
@@ -37,16 +38,13 @@ class BaseTask:
 		return True
 
 
-
-
 class Task(BaseTask):
 	@property
 	def modification_time(self):
 		mod_times = [target.modification_time for target in self.targets()]
-		if mod_times == []:
+		if mod_times:
 			return 0
 		return max(mod_times)
-
 
 	def make(self):
 		self.debug('')
@@ -54,15 +52,16 @@ class Task(BaseTask):
 		for input_ in self.inputs():
 			input_.set_indent_level(self._indent_level + 1)
 			dependency_mod_time = input_.make()
-			newest_dependency_mod_time = max(newest_dependency_mod_time, dependency_mod_time)
+			newest_dependency_mod_time = max(newest_dependency_mod_time,
+															dependency_mod_time)
 
 		if newest_dependency_mod_time == END_OF_TIME:
-			#self.debug('At least, one of the dependencies triggered the build !')
+			#self.debug('At least, one of the dependencies triggered the build')
 			self.command()
 			self.debug('Regeneration succeeded !')
 			return END_OF_TIME
 
-		#self.debug('Cannot make a decision based solely on dependencies. Will check targets !')
+		#self.debug('Cannot decide based on dependencies. Checking targets')
 		for target in self.targets():
 			target.set_indent_level(self._indent_level + 1)
 			if not target.is_up_to_date(newest_dependency_mod_time):
@@ -70,6 +69,7 @@ class Task(BaseTask):
 				self.debug('Regeneration succeeded !')
 				return END_OF_TIME
 		return self.modification_time
+
 
 class Path(PythonPathClass, BaseTask):
 	@property
@@ -97,9 +97,11 @@ class Popen(PythonPopenClass, BaseTask):
 
 	def make(self):
 		if self.wait() == 0:
-			self.debug('Dependency command exited with return code 0 => satisfied')
+			self.debug('Dependency command exited with return code 0 '
+															'=> satisfied')
 			return 0
-		self.debug('Dependency command exited with return code !=0 => Will trigger ancestors build methods')
+		self.debug('Dependency command exited with return code !=0 '
+									'=> Will trigger ancestors build methods')
 		return END_OF_TIME
 
 

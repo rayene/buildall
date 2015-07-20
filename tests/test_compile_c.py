@@ -17,6 +17,7 @@ class CreateObjFile(Task):
 		#os.system('gcc -c %s.o -o %s.o'%self.filename)
 		Path(self.filename + '.o').touch()
 
+
 class CreateProgram(Task):
 	def inputs(self):
 		return CreateObjFile('lib1'), CreateObjFile('lib2')

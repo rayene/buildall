@@ -2,6 +2,7 @@ from unittest import TestCase
 import time
 from buildall import Task, Path
 
+
 class CreateItems(Task):
 	command_call_count = 0
 
@@ -44,13 +45,13 @@ class ComputeSum(Task):
 
 	def command(self):
 		ComputeSum.command_call_count += 1
-		sum = 0
+		sum_ = 0
 		for file in self.inputs()[0].targets():
 			with file.open(encoding='UTF-8') as f:
-				sum += int(f.read())
+				sum_ += int(f.read())
 
 		with self.targets()[0].open('w', encoding='UTF-8') as f:
-			f.write('%d' % sum)
+			f.write('%d' % sum_)
 
 
 class TestPipelineWithPath(TestCase):
@@ -87,7 +88,6 @@ class TestPipelineWithPath(TestCase):
 		self.assertEqual(2, ComputeSum.command_call_count)
 		with open('total.txt', encoding='UTF-8') as f:
 			self.assertEqual('1365', f.read())
-
 
 	def test_1_tax_file_modified(self):
 		ComputeSum().make()
