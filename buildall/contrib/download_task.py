@@ -23,6 +23,7 @@ class DownloadTask(Task):
         with open(self._destination, 'rb') as f:
             hasher = hashlib.md5()
             hasher.update(f.read())
-
-        if self._md5 != hasher.hexdigest():
-            raise BuildException('Download corrupt !')
+        md5 = hasher.hexdigest()
+        if self._md5 != md5:
+            raise BuildException('Download corrupt ! '
+                            'Expected md5="%s", found="%s"'%(self._md5, md5))
