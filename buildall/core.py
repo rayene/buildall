@@ -62,7 +62,7 @@ class Task(BaseTask):
             return END_OF_TIME
 
         #self.debug('Cannot decide based on dependencies. Checking targets')
-        for target in self.targets():
+        for target in [self.target()]:
             target.set_indent_level(self._indent_level + 1)
             if not target.is_up_to_date(newest_dependency_mod_time):
                 self.command()
@@ -70,6 +70,22 @@ class Task(BaseTask):
                 return END_OF_TIME
         self.debug('Nothing to do !')
         return self.modification_time
+
+    def __lshift__(self, other):
+        # 'other' can be a task or a list of tasks
+        try:
+            iter(other)
+            #deps = [o.targets() for o in other]
+        except TypeError:
+            self._child_tasks = [other]
+            #deps = other.targets()
+        else:
+            self._child_tasks = other
+
+        return self
+
+    def set_child_tasks(self, child_tasks):
+        self._child_tasks = child_tasks
 
 
 class Path(PythonPathClass, BaseTask):
