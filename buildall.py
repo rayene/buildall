@@ -42,7 +42,7 @@ class Task(BaseTask):
 	@property
 	def modification_time(self):
 		mod_times = [target.modification_time for target in self.targets()]
-		if mod_times:
+		if not mod_times:
 			return 0
 		return max(mod_times)
 
