@@ -5,5 +5,5 @@ python:
 install:
   - pip install coveralls
 # command to run tests
-script: coverage run -m unittest discover
+script: coverage run --source=buildall -m unittest discover
 after_success: coveralls
