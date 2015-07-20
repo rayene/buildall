@@ -32,7 +32,7 @@ class BaseTask:
 
     def is_up_to_date(self, dependencies_modification_time):
         if self.modification_time < dependencies_modification_time:
-            self.debug('Target unsatisfied. Will trigger the build !')
+            self.debug('Target unsatisfied (%d). Will trigger the build !'%self.modification_time)
             return False
         self.debug('Target is up-to-date')
         return True
@@ -68,6 +68,7 @@ class Task(BaseTask):
                 self.command()
                 self.debug('Regeneration succeeded !')
                 return END_OF_TIME
+        self.debug('Nothing to do !')
         return self.modification_time
 
 
@@ -103,8 +104,6 @@ class Popen(PythonPopenClass, BaseTask):
         self.debug('Dependency command exited with return code !=0 '
                                     '=> Will trigger ancestors build methods')
         return END_OF_TIME
-
-
 
 
 class BuildException(Exception):

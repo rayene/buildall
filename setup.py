@@ -8,5 +8,5 @@ setup(name='buildall',
       author='Rayene BEN RAYANA',
       author_email='rayene.benrayana@gmail.com',
       url='',
-      #packages=['buildall'],
+      packages=['buildall', 'buildall.contrib'],
 )
