@@ -3,32 +3,29 @@ from buildall import Task, Popen, BuildException
 
 
 class TestPipelineExceptions(TestCase):
-	def test_command_not_implemented(self):
-		class TaskA(Task):
-			def inputs(self):
-				return Popen('exit 1', shell=True),
+    def test_command_not_implemented(self):
+        class TaskA(Task):
+            pass
 
-		with self.assertRaisesRegex(NotImplementedError,
-												'implement your own command'):
-			TaskA().make()
+        t = TaskA() << Popen('exit 1', shell=True)
+        with self.assertRaisesRegex(NotImplementedError,
+                                                'implement your own build'):
+            t.make()
 
-	def test_empty_targets_executed(self):
-		class EmptyTargets(Task):
-			def inputs(self):
-				return Popen('exit 1', shell=True),
+    def test_empty_targets_executed(self):
+        class EmptyTargets(Task):
+            def build(self, *args):
+                raise BuildException('I have been called')
 
-			def command(self):
-				raise BuildException('I have been called')
+        t = EmptyTargets() << Popen('exit 1', shell=True)
+        with self.assertRaisesRegex(BuildException, 'I have been called'):
+            t.make()
 
-		with self.assertRaisesRegex(BuildException, 'I have been called'):
-			EmptyTargets().make()
 
-	def test_empty_targets_not_executed(self):
-		class EmptyTargets(Task):
-			def inputs(self):
-				return Popen('exit 0', shell=True),
+    def test_empty_targets_not_executed(self):
+        class EmptyTargets(Task):
+            def build(self, *args):
+                raise Exception('If called, the test fails')  # pragma: no cover
 
-			def command(self):
-				raise Exception('If called, the test fails')  # pragma: no cover
-
-		EmptyTargets().make()
+        t = EmptyTargets() << Popen('exit 0', shell=True)
+        t.make()

@@ -8,13 +8,10 @@ class DownloadTask(Task):
         self._destination = destination
         self._md5 = md5
 
-    def inputs(self):
-        return []
+    def target(self):
+        return Path(self._destination)
 
-    def targets(self):
-        return Path(self._destination),
-
-    def command(self):
+    def build(self):
         self.debug('Downloading %s to %s' % (self._url,
                                               self._destination))
         urllib.request.urlretrieve(self._url, self._destination)

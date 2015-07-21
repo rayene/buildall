@@ -6,7 +6,8 @@ class TestCopyTask(TestCase):
 
     def test_copy_task(self):
         Path('a').touch()
-        CopyTask('a', 'b').make()
+        cp = CopyTask('b') << Path('a')
+        cp.make()
         self.assertTrue(Path('b').exists())
 
 

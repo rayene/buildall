@@ -2,17 +2,14 @@ import shutil
 from buildall import Task, Path
 
 class CopyTask(Task):
-    def __init__(self, source, destination):
-        self._source = source
-        self._destination = destination
+    def __init__(self, destination):
+        self._destination = Path(destination)
 
-    def inputs(self):
-        return Path(self._source),
+    def target(self):
+        return self._destination
 
-    def targets(self):
-        return Path(self._destination),
-
-    def command(self):
-        self.debug('Copying %s to %s' % (self._source,
+    def build(self, source):
+        assert source.exists()
+        self.debug('Copying %s to %s' % (source,
                                               self._destination))
-        shutil.copyfile(str(Path(self._source)), str(Path(self._destination)))
+        shutil.copyfile(str(source), str(self._destination))
