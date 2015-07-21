@@ -2,7 +2,7 @@ import urllib.request
 import hashlib
 from buildall import Task, BuildException, Path
 
-class DownloadTask(Task):
+class Download(Task):
     def __init__(self, url, destination, md5=None):
         self._url = url
         self._destination = destination

@@ -1,14 +1,14 @@
 from unittest import TestCase
-from buildall.contrib.decompress_task import DecompressTask, Path
+from buildall.contrib.decompress import Decompress, Path
 import tarfile
 
-class TestDecompressTask(TestCase):
+class TestDecompress(TestCase):
     def test_decompress_task(self):
         Path('a').touch()
         with tarfile.open('a.tar.gz', 'w') as t:
             t.add('a')
         Path('a').unlink()
-        d = DecompressTask('a') << Path('a.tar.gz')
+        d = Decompress('a') << Path('a.tar.gz')
         d.make()
         self.assertTrue(Path('a').exists())
 

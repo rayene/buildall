@@ -1,7 +1,7 @@
 import shutil
 from buildall import Task, Path
 
-class CopyTask(Task):
+class Copy(Task):
     def __init__(self, destination):
         self._destination = Path(destination)
 

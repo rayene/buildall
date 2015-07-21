@@ -1,7 +1,7 @@
 from buildall import Task, BuildException, Path
 import tarfile
 
-class DecompressTask(Task):
+class Decompress(Task):
     def __init__(self, decompressed):
         self._decompressed = decompressed
 

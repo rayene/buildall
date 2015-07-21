@@ -1,12 +1,12 @@
 from unittest import TestCase
-from buildall.contrib.copy_task import CopyTask, Path
+from buildall.contrib.copy import Copy, Path
 import tarfile
 
-class TestCopyTask(TestCase):
+class TestCopy(TestCase):
 
     def test_copy_task(self):
         Path('a').touch()
-        cp = CopyTask('b') << Path('a')
+        cp = Copy('b') << Path('a')
         cp.make()
         self.assertTrue(Path('b').exists())
 
