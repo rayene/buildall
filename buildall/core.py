@@ -15,9 +15,6 @@ class BaseTask:
     def __str__(self):
         return self.__class__.__name__
 
-    def inputs(self):
-        return []
-
     def build(self, *args):
         raise NotImplementedError('You should implement your own build()')
 
@@ -80,34 +77,27 @@ class Task(BaseTask):
         return self.modification_time
 
     def __add__(self, other):
-        try:
-            iter(other)
-            return [self] + other
-        except TypeError:
-            return [self, other]
+        return TargetList() + self + other
 
     def __lshift__(self, other):
         # 'other' can be a task or a list of tasks
         try:
             iter(other)
             self._child_tasks = other
-            #deps = [o.targets() for o in other]
         except TypeError:
             self._child_tasks = [other]
-            #deps = other.targets()
-
-
         return self
 
-    def set_child_tasks(self, child_tasks):
-        self._child_tasks = child_tasks
 
-    def _get_dependencies(self):
-        deps = []
-        for child in self._child_tasks:
-            child_target = child.targets()
-            deps.append(child_target)
-        return deps
+class TargetList(list):
+    def __add__(self, other):
+        if isinstance(other, BaseTask):
+            self.append(other)
+        else:
+            super().__add__(other)
+        return self
+
+
 
 
 
