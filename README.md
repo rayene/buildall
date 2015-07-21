@@ -25,8 +25,8 @@ to achieve simple tasks. Buildall is simple !
 
 Buildall offers the same interface as Python's standard library classes
 
-1/ pathlib.Path for object oriented file manipulation
-2/ subprocess.Popen for lanching external programs
+1. pathlib.Path for object oriented file manipulation
+2. subprocess.Popen for lanching external programs
 
 If you already know how these classes are used, you have 80% of the knowledge
 necessary to build a pipeline with buildall.
