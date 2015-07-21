@@ -47,8 +47,10 @@ pipeline.make()
 
 If you want to run the pipeline in parallel. Set the parallel parameter to
 True. TaskB and TaskC will be lanched at the same time (not implemented yet).
+```python
 pipeline = TaskA << TaskB + TaskC
 pipeline.make(parallel=True)
+```
 
 Example
 =======
@@ -57,28 +59,28 @@ Downloading a movie and a movie player :
 
 
 ```python
-download_movie = buildall.Download(url='http://example.com/movie.avi', destination='movie.avi')
-download_movie_player = buildall.Download(url='http://example.com/movie_player.tar.bz2', destination='movie_player.tar.bz2')
+movie_url = 'http://example.com/movie.avi'
+player_url = 'http://example.com/movie_player.tar.bz2'
+download_movie = buildall.Download(url=movie_url, destination='movie.avi')
+download_movie_player = buildall.Download(url=player_url,
+                                    destination='movie_player.tar.bz2')
 decompress_movie_player= buildall.Decompress(destination='movie_player')
 play_movie = buildall.Popen('movie_player movie.avi', shell=True)
 
 pipeline = play_movie << download_movie + (decompress_player << download_player)
 
 # Now, the pipeline is ready. We can call the run() method
-
 pipeline.run()  # Will last for a while.
+
 
 # When we run the pipeline for the first time, all the tasks are triggered. This
 may take some time. But if you run() it again, it is immediate.
-
 pipeline.run()  # Very fast since nothing changed
 
 All intermediate files are kept and checked at every run. For example, if we delete
 the movie_player.tar.bz2 file, it will be redownloaded and decompressed.
-
 Path('movie_player.tar.bz2').unlink()
 pipeline.run()  # Re-downloads the movie player archive and decompresses it.
-
 ```
 
 Status
