@@ -1,6 +1,8 @@
 import urllib.request
 import hashlib
+
 from buildall import Task, BuildException, Path
+
 
 class Download(Task):
     def __init__(self, url, destination, md5=None):
@@ -13,7 +15,7 @@ class Download(Task):
 
     def build(self):
         self.debug('Downloading %s to %s' % (self._url,
-                                              self._destination))
+                                             self._destination))
         urllib.request.urlretrieve(self._url, self._destination)
         if not self._md5:
             return
@@ -23,4 +25,5 @@ class Download(Task):
         md5 = hasher.hexdigest()
         if self._md5 != md5:
             raise BuildException('Download corrupt ! '
-                            'Expected md5="%s", found="%s"'%(self._md5, md5))
+                                 'Expected md5="%s", found="%s"' % (
+                                 self._md5, md5))

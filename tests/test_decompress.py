@@ -1,6 +1,8 @@
 from unittest import TestCase
-from buildall.contrib.decompress import Decompress, Path
 import tarfile
+
+from buildall.contrib.decompress import Decompress, Path
+
 
 class TestDecompress(TestCase):
     def test_decompress_task(self):

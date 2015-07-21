@@ -1,4 +1,5 @@
 from unittest import TestCase
+
 from buildall import Task, Popen, BuildException
 
 
@@ -9,7 +10,7 @@ class TestPipelineExceptions(TestCase):
 
         t = TaskA() << Popen('exit 1', shell=True)
         with self.assertRaisesRegex(NotImplementedError,
-                                                'implement your own build'):
+                                    'implement your own build'):
             t.make()
 
     def test_empty_targets_executed(self):
@@ -20,7 +21,6 @@ class TestPipelineExceptions(TestCase):
         t = EmptyTargets() << Popen('exit 1', shell=True)
         with self.assertRaisesRegex(BuildException, 'I have been called'):
             t.make()
-
 
     def test_empty_targets_not_executed(self):
         class EmptyTargets(Task):

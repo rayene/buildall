@@ -1,5 +1,7 @@
-from buildall import Task, BuildException, Path
 import tarfile
+
+from buildall import Task, Path
+
 
 class Decompress(Task):
     def __init__(self, decompressed):
@@ -10,7 +12,7 @@ class Decompress(Task):
 
     def build(self, compressed):
         self.debug('Decompressing %s to %s' % (compressed,
-                                              self._decompressed))
+                                               self._decompressed))
         with tarfile.open(str(compressed)) as f:
             f.extractall(str(Path(self._decompressed).parent))
         assert Path(self._decompressed).exists()

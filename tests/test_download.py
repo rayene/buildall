@@ -1,17 +1,19 @@
 from unittest import TestCase
+
 from buildall.contrib.download import Download, Path, BuildException
+
 
 class TestDownload(TestCase):
     def download_jquery(self, md5):
         d = Download(
-            url='https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js',
+            url='https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery'
+                '.min.js',
             destination='jquery.min.js',
             md5=md5
         )
         d.make()
         self.assertTrue(Path('jquery.min.js').exists())
         Path('jquery.min.js').unlink()
-
 
     def test_download_task_without_md5(self):
         self.download_jquery(None)

@@ -1,6 +1,8 @@
 from unittest import TestCase
 import time
+
 from buildall import Task, Path
+
 
 class CreateItem(Task):
     def __init__(self, num):
@@ -12,6 +14,7 @@ class CreateItem(Task):
     def build(self):
         with self._output_path.open('w', encoding='UTF-8') as f:
             f.write('100')
+
 
 class AddTaxToItem(Task):
     def __init__(self, num):
@@ -26,8 +29,8 @@ class AddTaxToItem(Task):
         with self._output_path.open('w', encoding='UTF-8') as f:
             f.write('%d' % int(price * 1.3))
 
-class ComputeSum(Task):
 
+class ComputeSum(Task):
     def target(self):
         return Path('total.txt')
 
@@ -40,9 +43,11 @@ class ComputeSum(Task):
         with Path('total.txt').open('w', encoding='UTF-8') as f:
             f.write('%d' % sum_)
 
+
 class TestPipelineWithPath(TestCase):
     def test_happy_path(self):
-        compute_sum = ComputeSum() << [AddTaxToItem(i) << CreateItem(i) for i in range(10)]
+        compute_sum = ComputeSum() << [AddTaxToItem(i) << CreateItem(i) for i in
+                                       range(10)]
         compute_sum.make()
         with open('total.txt', encoding='UTF-8') as f:
             self.assertEqual('1300', f.read())
@@ -51,22 +56,8 @@ class TestPipelineWithPath(TestCase):
         for f in Path('.').glob('*.txt'):
             f.unlink()
 
+
 class DTestPipelineWithPath():
-    def setUp(self):
-        CreateItem.build_call_count = 0
-        AddTaxToItem.build_call_count = 0
-        ComputeSum.build_call_count = 0
-
-    def tearDown(self):
-        for item in range(2):
-            for f in Path('.').glob('*.txt'):
-                f.unlink()
-
-    def test_happy_path(self):
-        ComputeSum().make()
-        with open('total.txt', encoding='UTF-8') as f:
-            self.assertEqual('1300', f.read())
-
     def test_already_up_to_date(self):
         ComputeSum().make()
         ComputeSum().make()

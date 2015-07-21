@@ -1,5 +1,7 @@
 import shutil
+
 from buildall import Task, Path
+
 
 class Copy(Task):
     def __init__(self, destination):
@@ -11,5 +13,5 @@ class Copy(Task):
     def build(self, source):
         assert source.exists()
         self.debug('Copying %s to %s' % (source,
-                                              self._destination))
+                                         self._destination))
         shutil.copyfile(str(source), str(self._destination))

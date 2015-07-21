@@ -1,5 +1,7 @@
 from unittest import TestCase
+
 from buildall import Task, Popen
+
 
 class ExitTask(Task):
     def __init__(self, target_exit_value):
@@ -13,7 +15,6 @@ class ExitTask(Task):
 
 
 class TestPipelineWithPopen(TestCase):
-
     def test_exit_1(self):
         e = ExitTask(1)
         with self.assertRaisesRegex(Exception, 'I have been called'):

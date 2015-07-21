@@ -6,8 +6,8 @@ from subprocess import Popen as PythonPopenClass
 END_OF_TIME = datetime.datetime(2100, 1, 1)
 BEGINNING_OF_TIME = datetime.datetime(1970, 1, 1)
 
-class BaseTask:
 
+class BaseTask:
     _indent_level = 0
     silent = False
     _child_tasks = []
@@ -55,16 +55,17 @@ class Task(BaseTask):
             child.set_indent_level(self._indent_level + 1)
             dependency_mod_time = child.make()
             newest_dependency_mod_time = max(newest_dependency_mod_time,
-                                                            dependency_mod_time)
+                                             dependency_mod_time)
             build_params.append(child.target())
 
         if newest_dependency_mod_time == END_OF_TIME:
-            #self.debug('At least, one of the dependencies triggered the build')
+            # self.debug('At least, one of the dependencies triggered the
+            # build')
             self.build(*build_params)
             self.debug('Regeneration succeeded !')
             return END_OF_TIME
 
-        #self.debug('Cannot decide based on dependencies. Checking targets')
+        # self.debug('Cannot decide based on dependencies. Checking targets')
         for target in [self.target()]:
             if target is None:
                 continue
@@ -98,9 +99,6 @@ class TargetList(list):
         return self
 
 
-
-
-
 class Path(PythonPathClass, BaseTask):
     def target(self):
         return self
@@ -109,12 +107,12 @@ class Path(PythonPathClass, BaseTask):
     def modification_time(self):
         if self.exists():
             mod_ts = self.stat().st_mtime_ns
-            return datetime.datetime.fromtimestamp(mod_ts/1000000000)
+            return datetime.datetime.fromtimestamp(mod_ts / 1000000000)
         return datetime.datetime(1969, 12, 31)
 
     def make(self):
         mod_ts = self.stat().st_mtime_ns
-        mod_dt = datetime.datetime.fromtimestamp(mod_ts/1000000000)
+        mod_dt = datetime.datetime.fromtimestamp(mod_ts / 1000000000)
         self.debug('Dependency file exists and its date is %s' % mod_dt)
         return mod_dt
 
@@ -135,10 +133,10 @@ class Popen(PythonPopenClass, BaseTask):
     def make(self):
         if self.wait() == 0:
             self.debug('Dependency build exited with return code 0 '
-                                                            '=> satisfied')
+                       '=> satisfied')
             return BEGINNING_OF_TIME
         self.debug('Dependency build exited with return code !=0 '
-                                    '=> Will trigger ancestors build methods')
+                   '=> Will trigger ancestors build methods')
         return END_OF_TIME
 
 
