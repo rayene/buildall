@@ -69,16 +69,20 @@ play_movie = buildall.Popen('movie_player movie.avi', shell=True)
 
 pipeline = play_movie << download_movie + (decompress_player << download_player)
 
+
 # Now, the pipeline is ready. We can call the run() method
 pipeline.run()  # Will last for a while.
+```
 
-
-# When we run the pipeline for the first time, all the tasks are triggered. This
+When we run the pipeline for the first time, all the tasks are triggered. This
 may take some time. But if you run() it again, it is immediate.
-pipeline.run()  # Very fast since nothing changed
+```python
+pipeline.run()  # Very fast since all tasks are up-to-date.
+```
 
 All intermediate files are kept and checked at every run. For example, if we delete
-the movie_player.tar.bz2 file, it will be redownloaded and decompressed.
+the movie_player.tar.bz2 file, it will be re-downloaded and decompressed.
+```python
 Path('movie_player.tar.bz2').unlink()
 pipeline.run()  # Re-downloads the movie player archive and decompresses it.
 ```
